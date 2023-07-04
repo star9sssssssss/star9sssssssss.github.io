@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>背包问题</title>
+      <link href="/2023/07/02/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/"/>
+      <url>/2023/07/02/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/</url>
+      
+        <content type="html"><![CDATA[<h1 id="01背包"><a href="#01背包" class="headerlink" title="01背包"></a>01背包</h1><h2 id="基础题型"><a href="#基础题型" class="headerlink" title="基础题型"></a>基础题型</h2><ol><li><a href="https://www.luogu.com.cn/problem/P1048">采药 </a><code>01背包简单应用</code></li><li><a href="https://www.luogu.com.cn/problem/U266184">宠物小精灵收服</a> <code>二维费用背包问题</code></li><li><a href="https://www.luogu.com.cn/problem/U291791">潜水员</a> <code>二维费用背包问题</code> <code>状态定义：是恰好满足</code> <code>重点：根据题意考虑初始化</code></li><li><a href="https://www.acwing.com/problem/content/280/">数字组合</a> <code>01背包</code> <code>状态定义: 恰好满足条件</code> <code>重点：根据题意考虑初始化</code></li></ol><h1 id="多重背包"><a href="#多重背包" class="headerlink" title="多重背包"></a>多重背包</h1><h2 id="基础题型-1"><a href="#基础题型-1" class="headerlink" title="基础题型"></a>基础题型</h2><ol><li><a href="https://www.luogu.com.cn/problem/U200694">庆功会</a> <code>多重背包</code> <code>滑动窗口优化</code></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> algorithm </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 背包问题 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>git-study</title>
       <link href="/2023/06/29/git-study/"/>
       <url>/2023/06/29/git-study/</url>
