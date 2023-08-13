@@ -1,0 +1,354 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>c/c++编译过程 | Normal</title><meta name="author" content="Jackyyy"><meta name="copyright" content="Jackyyy"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="简单编译原理 1 编译过程hello 程序的生命周期从一个高级 C 语言程序开始 为了在系统上运行 hello.c 程序，每条 C 语句都必须被其他程序转化为一系列的低级机器语言指令 然后这些指令按照一种称为可执行目标程序的格式打好包，并以二进制磁盘文件的形式存放起来 GCC 编译器读取源程序文件 hello.c，并把它翻译成一个可执行目标文件 hello。这个翻译过程可分为四个阶段完成，如下图所">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c&#x2F;c++编译过程">
+<meta property="og:url" content="http://example.com/2023/08/12/c-c-%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B/index.html">
+<meta property="og:site_name" content="Normal">
+<meta property="og:description" content="简单编译原理 1 编译过程hello 程序的生命周期从一个高级 C 语言程序开始 为了在系统上运行 hello.c 程序，每条 C 语句都必须被其他程序转化为一系列的低级机器语言指令 然后这些指令按照一种称为可执行目标程序的格式打好包，并以二进制磁盘文件的形式存放起来 GCC 编译器读取源程序文件 hello.c，并把它翻译成一个可执行目标文件 hello。这个翻译过程可分为四个阶段完成，如下图所">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/a.jpg">
+<meta property="article:published_time" content="2023-08-12T08:23:08.000Z">
+<meta property="article:modified_time" content="2023-08-12T08:40:24.504Z">
+<meta property="article:author" content="Jackyyy">
+<meta property="article:tag" content="c&#x2F;c++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/a.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2023/08/12/c-c-%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":250},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"top-right"},
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'c/c++编译过程',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-08-12 16:40:24'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const now = new Date()
+          const hour = now.getHours()
+          const isNight = hour <= 6 || hour >= 18
+          if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+          else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/a.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/progress_bar.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="https://cdn1.tianli0.top/npm/element-ui@2.15.6/packages/theme-chalk/lib/index.css"><svg aria-hidden="true" style="position:absolute; overflow:hidden; width:0; height:0"><symbol id="icon-sun" viewBox="0 0 1024 1024"><path d="M960 512l-128 128v192h-192l-128 128-128-128H192v-192l-128-128 128-128V192h192l128-128 128 128h192v192z" fill="#FFD878" p-id="8420"></path><path d="M736 512a224 224 0 1 0-448 0 224 224 0 1 0 448 0z" fill="#FFE4A9" p-id="8421"></path><path d="M512 109.248L626.752 224H800v173.248L914.752 512 800 626.752V800h-173.248L512 914.752 397.248 800H224v-173.248L109.248 512 224 397.248V224h173.248L512 109.248M512 64l-128 128H192v192l-128 128 128 128v192h192l128 128 128-128h192v-192l128-128-128-128V192h-192l-128-128z" fill="#4D5152" p-id="8422"></path><path d="M512 320c105.888 0 192 86.112 192 192s-86.112 192-192 192-192-86.112-192-192 86.112-192 192-192m0-32a224 224 0 1 0 0 448 224 224 0 0 0 0-448z" fill="#4D5152" p-id="8423"></path></symbol><symbol id="icon-moon" viewBox="0 0 1024 1024"><path d="M611.370667 167.082667a445.013333 445.013333 0 0 1-38.4 161.834666 477.824 477.824 0 0 1-244.736 244.394667 445.141333 445.141333 0 0 1-161.109334 38.058667 85.077333 85.077333 0 0 0-65.066666 135.722666A462.08 462.08 0 1 0 747.093333 102.058667a85.077333 85.077333 0 0 0-135.722666 65.024z" fill="#FFB531" p-id="11345"></path><path d="M329.728 274.133333l35.157333-35.157333a21.333333 21.333333 0 1 0-30.165333-30.165333l-35.157333 35.157333-35.114667-35.157333a21.333333 21.333333 0 0 0-30.165333 30.165333l35.114666 35.157333-35.114666 35.157334a21.333333 21.333333 0 1 0 30.165333 30.165333l35.114667-35.157333 35.157333 35.157333a21.333333 21.333333 0 1 0 30.165333-30.165333z" fill="#030835" p-id="11346"></path></symbol></svg><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-double-row-display@1.00/cardlistpost.min.css"/>
+<style>#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags:before {content:"\A";
+  white-space: pre;}#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags > .article-meta__separator{display:none}</style>
+<link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/font-awesome-animation.min.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/tag_plugins.css" media="defer" onload="this.media='all'"><script src="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/carousel-touch.js"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/a.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Normal"><span class="site-name">Normal</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">c/c++编译过程</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-08-12T08:23:08.000Z" title="发表于 2023-08-12 16:23:08">2023-08-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-08-12T08:40:24.504Z" title="更新于 2023-08-12 16:40:24">2023-08-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/c/">c++</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="c/c++编译过程"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="简单编译原理"><a href="#简单编译原理" class="headerlink" title="简单编译原理"></a>简单编译原理</h1><hr>
+<h2 id="1-编译过程"><a href="#1-编译过程" class="headerlink" title="1 编译过程"></a>1 编译过程</h2><p>hello 程序的生命周期从一个高级 C 语言程序开始</p>
+<p>为了在系统上运行 hello.c 程序，每条 C 语句都必须被其他程序转化为一系列的低级机器语言指令</p>
+<p>然后这些指令按照一种称为可执行目标程序的格式打好包，并以二进制磁盘文件的形式存放起来</p>
+<p>GCC 编译器读取源程序文件 hello.c，并把它翻译成一个可执行目标文件 hello。这个翻译过程可分为四个阶段完成，如下图所示</p>
+<p>执行这四个阶段的程序（预处理器、编译器、汇编器和链接器）一起构成了编译系统（compilation system）</p>
+<hr>
+<h3 id="1-1-预处理阶段"><a href="#1-1-预处理阶段" class="headerlink" title="1.1 预处理阶段"></a>1.1 预处理阶段</h3><p><code>预处理器（cpp）</code>根据以字符#开头的命令，修改原始的 C 程序。比如 hello.c中第 1行的 <code>#include &lt;stdio.h&gt;</code> 命令告诉预处理器读取系统头文件 stdio.h 的内容，并把它直接插入程序文本中。结果就得到了另一个 C 程序，通常是以 <code>.i</code> 作为文件扩展名</p>
+<hr>
+<h3 id="1-2-编译阶段"><a href="#1-2-编译阶段" class="headerlink" title="1.2 编译阶段"></a>1.2 编译阶段</h3><p><code>编译器（ccl）</code>将文本文件<code>hello.i</code>翻译成文本文件 <code>hello.s</code>，它包含一<br>个汇编语言程序。每条语句都以一种文本格式描述了一条低级机器语言指令。</p>
+<hr>
+<h3 id="1-3-汇编阶段"><a href="#1-3-汇编阶段" class="headerlink" title="1.3 汇编阶段"></a>1.3 汇编阶段</h3><p><code>汇编器（as）</code>将 <code>hello.s</code> 翻译成机器语言指令，把这些指令打包成一种叫做可重定位目标程序（relocatable object program）的格式，并将结果保存在目标文件 <code>hello.o</code>中。</p>
+<p><code>hello.o</code>文件是一个二进制文件，它包含的17 个字节是函数 main的指令编码。如果我们在文本编辑器中打开 <code>hello.o</code>文件，将看到一堆乱码。</p>
+<hr>
+<h3 id="1-4-链接阶段"><a href="#1-4-链接阶段" class="headerlink" title="1.4 链接阶段"></a>1.4 链接阶段</h3><p>注意，<code>hello</code>程序调用了 <code>printf</code> 函数，它是每个 C 编译器都提供的标准 C 库中的一个函数。<code>printf</code>函数存在于一个名为 <code>printf.o</code> 的单独的预编译好了的目标文件中，而这个文件必须以某种方式合并到我们的 <code>hello.o</code> 程序中。</p>
+<p><code>链接器（ld）</code>就负责处理这种合并。结果就得到 <code>hello</code> 文件，它是一个<strong>可执行目标文件（或者简称为可执行文件）</strong>，可以被加载到内存中，由系统执行。</p>
+<hr>
+<h1 id="C语言"><a href="#C语言" class="headerlink" title="C语言"></a><strong>C语言</strong></h1><h2 id="1-Compiling-C"><a href="#1-Compiling-C" class="headerlink" title="1 Compiling C"></a>1 Compiling C</h2><h3 id="1-1-Preprocessing"><a href="#1-1-Preprocessing" class="headerlink" title="1.1 Preprocessing"></a>1.1 Preprocessing</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 不会生成 .i 文件</span><br><span class="line">gcc -E main.c</span><br><span class="line">gcc -E main.c -o helloworld.i</span><br></pre></td></tr></table></figure>
+<ul>
+<li>-E 选项告诉编译器只进行预处理操作</li>
+<li>-o 选项把预处理的结果输出到指定文件</li>
+</ul>
+<h3 id="1-2-Generating-Assembly-Language"><a href="#1-2-Generating-Assembly-Language" class="headerlink" title="1.2 Generating Assembly Language"></a>1.2 Generating Assembly Language</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc -S main.c</span><br><span class="line">gcc -S main.c -o xxx.s</span><br></pre></td></tr></table></figure>
+<ul>
+<li>-S 选项告诉编译器，进行预处理和编译成汇编语言操作</li>
+</ul>
+<h3 id="1-3-Source-File-to-Object-File"><a href="#1-3-Source-File-to-Object-File" class="headerlink" title="1.3 Source File to Object File"></a>1.3 Source File to Object File</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gcc -c main.c</span><br><span class="line">gcc -c main.c -o xxx.o</span><br><span class="line"># 编译多个 .c 文件</span><br><span class="line">gcc -c main.c add.c minus.c</span><br></pre></td></tr></table></figure>
+<h3 id="1-4-Single-Source-to-Executable"><a href="#1-4-Single-Source-to-Executable" class="headerlink" title="1.4 Single Source to Executable"></a>1.4 Single Source to Executable</h3><ul>
+<li>注意：后面三个命令执行后并没有按编译过程出现 .i .s 或 .o 文件，并不意味着没有经历这些过程</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc main.c</span><br><span class="line">gcc main.c -o xxx</span><br></pre></td></tr></table></figure>
+<p>执行程序</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./可执行文件</span><br></pre></td></tr></table></figure>
+<h3 id="1-5-Multiple-Sources-to-Executable"><a href="#1-5-Multiple-Sources-to-Executable" class="headerlink" title="1.5 Multiple Sources to Executable"></a>1.5 Multiple Sources to Executable</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc main.c add.c minus.c -o exec</span><br><span class="line">./exec</span><br></pre></td></tr></table></figure>
+<h2 id="2-Creating-a-Static-Library"><a href="#2-Creating-a-Static-Library" class="headerlink" title="2 Creating a Static Library"></a>2 Creating a Static Library</h2><ul>
+<li><p>编译成 .o 的文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc -c [.c] -o [自定义文件名] </span><br><span class="line">gcc -c [.c] [.c] ...</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编静态库</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ar -r [lib自定义库名.a] [.o] [.o] ...</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>链接成可执行文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc [.c] [.a] -o [自定义输出文件名]</span><br><span class="line">gcc [.c] -o [自定义输出文件名] -l[库名] -L[库所在路径]</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="3-Creating-a-Shared-Library"><a href="#3-Creating-a-Shared-Library" class="headerlink" title="3 Creating a Shared Library"></a>3 Creating a Shared Library</h2><ul>
+<li>编译二进制.o文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -c -fpic [.c/.cpp][.c/.cpp]... </span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>编库</li>
+</ul>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -shared [.o][.o]... -o [lib自定义库名.so]</span><br></pre></td></tr></table></figure>
+<ul>
+<li>链接库到可执行文件</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc [.c/.cpp] -o [自定义可执行文件名]  -l[库名] -L[库路径] -Wl,-rpath=[库路径]</span><br></pre></td></tr></table></figure>
+<h2 id="4-总结"><a href="#4-总结" class="headerlink" title="4 总结"></a>4 总结</h2><h3 id="1-编译过程-1"><a href="#1-编译过程-1" class="headerlink" title="1 编译过程"></a>1 编译过程</h3><p>源文件.c文件 -&gt; 预编译成.i文件 -&gt; 编译成汇编语言.s -&gt; 汇编成.o文件 -&gt; 链接成可执行文件（名字自定义，后缀没关系）</p>
+<h3 id="2-编译过程命令"><a href="#2-编译过程命令" class="headerlink" title="2 编译过程命令"></a>2 编译过程命令</h3><ul>
+<li><p>预处理：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -E [.c源文件] -o [自定义输出文件名.i]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编译成汇编语言(隐藏了预处理操作) :</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -S [.c源文件] </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>会变成.o的object文件（二进制文件，可用于链接） :</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -c [.c源文件] [.c源文件] [...] (可选选项：-o [自定文件名])</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="3-库"><a href="#3-库" class="headerlink" title="3 库"></a>3 库</h3><blockquote>
+<p><strong><code>静态库</code></strong></p>
+</blockquote>
+<ul>
+<li><p>编库（先转成.o文件，再编成lib[自定库名].a）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -c [.c源文件] [.c源文件] [...] (可选选项：-o [自定文件名])</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ar -r lib[自定库名].a [.o文件] [.o文件] [...]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>链接</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc [main文件] -o [自定义输出可执行文件名] -l[库名] -L[库的路径]</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p><strong><code>动态库</code></strong></p>
+</blockquote>
+<ul>
+<li><p>编库</p>
+<ul>
+<li><p>第一种做法， 先转成.o文件，再编成.so文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -c -fpic [.c源文件] [.c源文件] [...]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -shared [.o文件] [.o文件] [...] -o lib[库名].so</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第二种做法，直接转成.so</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -fpic -shared [.c源文件] [.c源文件] [...] -o lib[库名].so</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>链接</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc [main文件] -o [自定义输出可执行文件名] -l[库名] -L[库所在路径] -Wl,-rpath=[库所在路径]</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="C"><a href="#C" class="headerlink" title="C++"></a>C++</h1><h2 id="1-Compiling-C-1"><a href="#1-Compiling-C-1" class="headerlink" title="1 Compiling C++"></a>1 Compiling C++</h2><h3 id="1-1-Preprocessing-1"><a href="#1-1-Preprocessing-1" class="headerlink" title="1.1 Preprocessing"></a>1.1 Preprocessing</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">g++ -E helloworld.c</span><br><span class="line">g++ -E helloworld.c -o helloworld.i</span><br></pre></td></tr></table></figure>
+<ul>
+<li>-E 选项告诉编译器只进行预处理操作</li>
+<li>-o 选项把预处理的结果输出到指定文件      </li>
+</ul>
+<h3 id="1-2-Generating-Assembly-Language-1"><a href="#1-2-Generating-Assembly-Language-1" class="headerlink" title="1.2 Generating Assembly Language"></a>1.2 Generating Assembly Language</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">g++ -S helloworld.c</span><br><span class="line">g++ -S helloworld.c -o helloworld.s</span><br></pre></td></tr></table></figure>
+<ul>
+<li>-S 选项告诉编译器，进行预处理和编译成汇编语言操作</li>
+</ul>
+<p>&emsp;</p>
+<h3 id="1-3-Source-File-to-Object-File-1"><a href="#1-3-Source-File-to-Object-File-1" class="headerlink" title="1.3 Source File to Object File"></a>1.3 Source File to Object File</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">g++ -c helloworld.c</span><br><span class="line">g++ -c helloworld.c -o harumph.o</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">编译多个 .c 文件</span></span><br><span class="line">g++ -c helloworld.c helloworld1.c helloworld2.c</span><br></pre></td></tr></table></figure>
+<p>&emsp;</p>
+<h3 id="1-4-Single-Source-to-Executable-1"><a href="#1-4-Single-Source-to-Executable-1" class="headerlink" title="1.4 Single Source to Executable"></a>1.4 Single Source to Executable</h3><ul>
+<li>注意：后面三个命令执行后并没有按编译过程出现 .i .s 或 .o 文件，并不意味着没有经历这些过程</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">g++ helloworld.c</span><br><span class="line">g++ helloworld.c -o howdy</span><br></pre></td></tr></table></figure>
+<p>执行程序<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./可执行文件</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;</p>
+<h3 id="1-5-Mltiple-Source-to-Executable"><a href="#1-5-Mltiple-Source-to-Executable" class="headerlink" title="1.5 Mltiple Source to Executable"></a>1.5 Mltiple Source to Executable</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ g++ hellomain.c sayhello.c -o hello</span><br></pre></td></tr></table></figure>
+<p>&emsp;</p>
+<h2 id="2-Creating-a-Static-Library-1"><a href="#2-Creating-a-Static-Library-1" class="headerlink" title="2 Creating a Static Library"></a>2 Creating a Static Library</h2><ul>
+<li>编译成 .o 的文件  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">g++ -c [.c] -o [自定义文件名] </span><br><span class="line">g++ -c [.c] [.c] ...</span><br></pre></td></tr></table></figure></li>
+<li>编静态库  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ar -r [lib自定义库名.a] [.o] [.o] ...</span><br></pre></td></tr></table></figure></li>
+<li>链接成可执行文件  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">g++ [.c] [.a] -o [自定义输出文件名]</span><br><span class="line">g++ [.c] -o [自定义输出文件名] -l[库名] -L[库所在路径]</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>&emsp;</p>
+<h2 id="3-Creating-a-Shared-Library-1"><a href="#3-Creating-a-Shared-Library-1" class="headerlink" title="3 Creating a Shared Library"></a>3 Creating a Shared Library</h2><ul>
+<li>编译二进制.o文件  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -c -fpic [.c/.cpp][.c/.cpp]... </span><br></pre></td></tr></table></figure></li>
+<li>编库  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -shared [.o][.o]... -o [lib自定义库名.so]</span><br></pre></td></tr></table></figure></li>
+<li>连接动态库到可执行文件  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ [.c/.cpp] -o [自定义可执行文件名]  -l[库名] -L[库路径] -Wl,-rpath=[库路径]</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>&emsp;</p>
+<h2 id="4-总结-1"><a href="#4-总结-1" class="headerlink" title="4 总结"></a>4 总结</h2><h3 id="1-编译过程-2"><a href="#1-编译过程-2" class="headerlink" title="1 编译过程"></a>1 编译过程</h3><p>源文件.c文件 -&gt; 预编译成.i文件 -&gt; 编译成汇编语言.s -&gt; 汇编成.o文件 -&gt; 链接成可执行文件（名字自定义，后缀没关系）</p>
+<h3 id="2-编译过程命令-1"><a href="#2-编译过程命令-1" class="headerlink" title="2 编译过程命令"></a>2 编译过程命令</h3><ul>
+<li>预处理：   <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -E [.c源文件] -o [自定义输出文件名.i]</span><br></pre></td></tr></table></figure></li>
+<li>编译成汇编语言(隐藏了预处理操作) :  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -S [.c源文件] </span><br></pre></td></tr></table></figure></li>
+<li>会变成.o的object文件（二进制文件，可用于链接） :  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -c [.c源文件] [.c源文件] [...] (可选选项：-o [自定文件名])</span><br></pre></td></tr></table></figure>
+<h3 id="3-库-1"><a href="#3-库-1" class="headerlink" title="3 库"></a>3 库</h3><blockquote>
+<p>静态库</p>
+</blockquote>
+</li>
+<li>编库（先转成.o文件，再编成lib[自定库名].a）  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -c [.c源文件] [.c源文件] [...] (可选选项：-o [自定文件名])</span><br></pre></td></tr></table></figure>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ar -r lib[自定库名].a [.o文件] [.o文件] [...]</span><br></pre></td></tr></table></figure></li>
+<li>链接  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ [main文件] -o [自定义输出可执行文件名] -l[库名] -L[库的路径]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>动态库</p>
+<ul>
+<li>编库      <ul>
+<li>第一种做法， 先转成.o文件，再编成.so文件 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -c -fpic [.c源文件] [.c源文件] [...]</span><br></pre></td></tr></table></figure>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -shared [.o文件] [.o文件] [...] -o lib[库名].so</span><br></pre></td></tr></table></figure></li>
+<li>第二种做法，直接转成.so <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -fpic -shared [.c源文件] [.c源文件] [...] -o lib[库名].so</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</blockquote>
+</li>
+<li><p>链接</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ [main文件] -o [自定义输出可执行文件名] -l[库名] -L[库所在路径] -Wl,-rpath=[库所在路径]</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Jackyyy</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/08/12/c-c-%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B/">http://example.com/2023/08/12/c-c-%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Normal</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/c-c/">c/c++</a></div><div class="post_share"><div class="social-share" data-image="/img/a.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/08/14/%E7%BB%8F%E5%85%B8%E9%A2%98%E5%9E%8B/" title="经典题型"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">经典题型</div></div></a></div><div class="next-post pull-right"><a href="/2023/08/09/linux/" title="linux"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">linux</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/a.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Jackyyy</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/star9ssssssss"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/star9sssssssss" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:xswl19442021@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86"><span class="toc-text">简单编译原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B"><span class="toc-text">1 编译过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E9%A2%84%E5%A4%84%E7%90%86%E9%98%B6%E6%AE%B5"><span class="toc-text">1.1 预处理阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E7%BC%96%E8%AF%91%E9%98%B6%E6%AE%B5"><span class="toc-text">1.2 编译阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E6%B1%87%E7%BC%96%E9%98%B6%E6%AE%B5"><span class="toc-text">1.3 汇编阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-%E9%93%BE%E6%8E%A5%E9%98%B6%E6%AE%B5"><span class="toc-text">1.4 链接阶段</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#C%E8%AF%AD%E8%A8%80"><span class="toc-text">C语言</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Compiling-C"><span class="toc-text">1 Compiling C</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-Preprocessing"><span class="toc-text">1.1 Preprocessing</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-Generating-Assembly-Language"><span class="toc-text">1.2 Generating Assembly Language</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-Source-File-to-Object-File"><span class="toc-text">1.3 Source File to Object File</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-Single-Source-to-Executable"><span class="toc-text">1.4 Single Source to Executable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-5-Multiple-Sources-to-Executable"><span class="toc-text">1.5 Multiple Sources to Executable</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Creating-a-Static-Library"><span class="toc-text">2 Creating a Static Library</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Creating-a-Shared-Library"><span class="toc-text">3 Creating a Shared Library</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%80%BB%E7%BB%93"><span class="toc-text">4 总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B-1"><span class="toc-text">1 编译过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B%E5%91%BD%E4%BB%A4"><span class="toc-text">2 编译过程命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%BA%93"><span class="toc-text">3 库</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#C"><span class="toc-text">C++</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Compiling-C-1"><span class="toc-text">1 Compiling C++</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-Preprocessing-1"><span class="toc-text">1.1 Preprocessing</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-Generating-Assembly-Language-1"><span class="toc-text">1.2 Generating Assembly Language</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-Source-File-to-Object-File-1"><span class="toc-text">1.3 Source File to Object File</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-Single-Source-to-Executable-1"><span class="toc-text">1.4 Single Source to Executable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-5-Mltiple-Source-to-Executable"><span class="toc-text">1.5 Mltiple Source to Executable</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Creating-a-Static-Library-1"><span class="toc-text">2 Creating a Static Library</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Creating-a-Shared-Library-1"><span class="toc-text">3 Creating a Shared Library</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%80%BB%E7%BB%93-1"><span class="toc-text">4 总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B-2"><span class="toc-text">1 编译过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B%E5%91%BD%E4%BB%A4-1"><span class="toc-text">2 编译过程命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%BA%93-1"><span class="toc-text">3 库</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/14/%E7%BB%8F%E5%85%B8%E9%A2%98%E5%9E%8B/" title="经典题型">经典题型</a><time datetime="2023-08-13T17:30:23.000Z" title="发表于 2023-08-14 01:30:23">2023-08-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/12/c-c-%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B/" title="c/c++编译过程">c/c++编译过程</a><time datetime="2023-08-12T08:23:08.000Z" title="发表于 2023-08-12 16:23:08">2023-08-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/09/linux/" title="linux">linux</a><time datetime="2023-08-09T07:27:14.000Z" title="发表于 2023-08-09 15:27:14">2023-08-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/08/07/nowcoder-week/" title="nowcoder-week">nowcoder-week</a><time datetime="2023-08-07T03:47:24.000Z" title="发表于 2023-08-07 11:47:24">2023-08-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/07/31/%E5%9B%BE%E8%AE%BA/" title="图论">图论</a><time datetime="2023-07-31T03:54:17.000Z" title="发表于 2023-07-31 11:54:17">2023-07-31</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2023 By Jackyyy</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><a class="icon-V hidden" onclick="switchNightMode()" title="浅色和深色模式转换"><svg width="25" height="25" viewBox="0 0 1024 1024"><use id="modeicon" xlink:href="#icon-moon"></use></svg></a><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"></div><script async src="//npm.elemecdn.com/pace-js@1.2.4/pace.min.js"></script><script src="/js/sun_moon.js" async></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="30" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><!-- hexo injector body_end start --><script async src="//at.alicdn.com/t/font_2032782_8d5kxvn09md.js"></script><!-- hexo injector body_end end --></body></html>
