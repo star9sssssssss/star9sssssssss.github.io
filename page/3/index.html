@@ -183,6 +183,89 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://star9sssssssss.github.io/2023/06/27/Merge-Sort/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jackyyy">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Normal">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/06/27/Merge-Sort/" class="post-title-link" itemprop="url">Merge_Sort</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-06-27 21:18:04" itemprop="dateCreated datePublished" datetime="2023-06-27T21:18:04+08:00">2023-06-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-06-28 22:02:17" itemprop="dateModified" datetime="2023-06-28T22:02:17+08:00">2023-06-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/algorithm/" itemprop="url" rel="index"><span itemprop="name">algorithm</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>归并排序（<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Merge_sort">merge sort</a>）是高效的基于比较的稳定排序算法</p>
+<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><p>基于分治思想将数组分为两个部分，使这两部分有序后，再进行合并，使最终序列有序，即不断对分开的序列进行递归处理，使序列的每一部分都有序，然后进行合并，得到最终的有序序列。</p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">merge_sort</span><span class="params">(<span class="type">int</span> l, <span class="type">int</span> r)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (l &gt;= r) <span class="keyword">return</span>;</span><br><span class="line">    <span class="type">int</span> mid = l + r &gt;&gt; <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">merge_sort</span>(l, mid), <span class="built_in">merge_sort</span>(mid + <span class="number">1</span>, r);</span><br><span class="line">    <span class="type">int</span> i = l, j = mid + <span class="number">1</span>, k = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i &lt;= mid &amp;&amp; j &lt;= r)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(q[i] &lt;= q[j]) temp[k ++] = q[i ++];</span><br><span class="line">        <span class="keyword">else</span> temp[k ++] = q[j ++];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span>(i &lt;= mid) temp[k ++] = q[i ++];</span><br><span class="line">    <span class="keyword">while</span>(j &lt;= r) temp[k ++] = q[j ++];</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = l, j = <span class="number">0</span>; i &lt;= r; i++,j++) q[i] = temp[j];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>扩展知识：<code>merge(start1, end1, start2, end2, arr, cmp)</code> 函数</p>
+<p>将两个升序的序列<code>a</code>,<code>b</code>按照<code>a</code>序列的区间 $[start1, end1)$内的数 和<code>b</code>序列的区间 $[start2, end2)$ 的数进行合并 ，并存储到<code>arr</code>中。</p>
+<p>优化后的代码</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">merge_sort</span><span class="params">(<span class="type">int</span> l, <span class="type">int</span> r)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (l &gt;= r) <span class="keyword">return</span>;</span><br><span class="line">    <span class="type">int</span> mid = l + r &gt;&gt; <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">merge_sort</span>(l, mid), <span class="built_in">merge_sort</span>(mid + <span class="number">1</span>, r);</span><br><span class="line">    <span class="type">int</span> i = l, j = mid + <span class="number">1</span>, k = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">merge</span>(q + l, q + mid + <span class="number">1</span>, q + j, q + r + <span class="number">1</span>, temp);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = l, j = <span class="number">0</span>; i &lt;= r; i++,j++) q[i] = temp[j];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="拓展题型"><a href="#拓展题型" class="headerlink" title="拓展题型"></a>拓展题型</h2><h3 id="1-求逆序对的数量"><a href="#1-求逆序对的数量" class="headerlink" title="1.求逆序对的数量"></a>1.求逆序对的数量</h3><p><a target="_blank" rel="noopener" href="https://www.acwing.com/problem/content/790/">题目信息</a></p>
+<p>关键：当数组有序时，数组中的逆序对为0，所以在归并排序中，每次和并数组两部分时都会减少逆序对的数量，同样也可以统计逆序对的数量，设左半部分的数为 <code>a[i]</code>, 右半部分的为 <code>a[j]</code> 如果 <code>a[i] &gt; a[j]</code>, 则左半部分从i后的所有数都大于<code>a[j]</code>, 这时便可以统计逆序对的数量了，直接全部计算即可，即 <code>m - i + 1</code>(m为进行分治的部分)，因为数组有序时，逆序对的数量为0，这样才不会少统计。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">merge_sort</span><span class="params">(<span class="type">int</span> l, <span class="type">int</span> r)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(l &gt;= r) <span class="keyword">return</span>;</span><br><span class="line">    <span class="type">int</span> m = (l + r) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">merge_sort</span>(l, m), <span class="built_in">merge_sort</span>(m + <span class="number">1</span>, r);</span><br><span class="line">    <span class="type">int</span> i = l, j = m + <span class="number">1</span>, k = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i &lt;= m &amp;&amp; j &lt;= r)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (a[i] &gt; a[j]) t[k ++] = a[j ++], ans += m - i + <span class="number">1</span>; <span class="comment">// 统计数目</span></span><br><span class="line">        <span class="keyword">else</span> t[k ++] = a[i ++];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (i &lt;= m) t[k ++] = a[i ++];</span><br><span class="line">    <span class="keyword">while</span> (j &lt;= r) t[k ++] = a[j ++];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=l,j=<span class="number">0</span>;i&lt;=r;i++,j++) a[i] = t[j]; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://star9sssssssss.github.io/2023/06/27/Quick-Sort/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -586,20 +669,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-count">25</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-count">18</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

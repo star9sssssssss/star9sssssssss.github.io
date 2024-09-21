@@ -1280,4 +1280,107 @@
         <tag>测试</tag>
       </tags>
   </entry>
+  <entry>
+    <title>cpp_base</title>
+    <url>/2024/09/18/cpp-base/</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h2 id="左值引用和右值引用"><a href="#左值引用和右值引用" class="headerlink" title="左值引用和右值引用"></a>左值引用和右值引用</h2><p>在C++中，左值（<code>lvalue</code>）和右值（<code>rvalue</code>）是表达式的两种基本分类，它们决定了表达式的结果在内存中的位置和状态。左值通常指的是具有持久状态的对象，它们有明确的内存地址，可以被多次赋值。而右值通常是临时的、没有持久状态的值，它们通常没有内存地址，或者其内存地址在表达式结束后就变得无效。</p>
+<p><em>引入引用的目的: 为对象创建别名，方便操作，并减少开销</em></p>
+<h3 id="左值引用"><a href="#左值引用" class="headerlink" title="左值引用"></a>左值引用</h3><p>左值引用是C++98就有的特性，它允许我们为已存在的对象创建一个别名。左值引用必须被初始化为一个左值，即一个具有持久状态的对象。</p>
+<p>目的: 在C++中使用引用，可以让我们直接访问和操作另一个变量的内存地址，而不需要通过指针的解引用操作。引用在语法上比指针更简洁，且在许多情况下更安全，且高效。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> a = <span class="number">100</span>;</span><br><span class="line">    <span class="type">int</span> &amp;b = a; <span class="comment">// b是a的引用</span></span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;a = &quot;</span> &lt;&lt; a &lt;&lt; <span class="string">&quot;, b = &quot;</span> &lt;&lt; b &lt;&lt; std::endl; <span class="comment">// 输出: a = 100, b = 100</span></span><br><span class="line"></span><br><span class="line">    b = <span class="number">200</span>; <span class="comment">// 更改b的值也会更改a的值</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;a = &quot;</span> &lt;&lt; a &lt;&lt; <span class="string">&quot;, b = &quot;</span> &lt;&lt; b &lt;&lt; std::endl; <span class="comment">// 输出: a = 200, b = 200</span></span><br><span class="line"></span><br><span class="line">   </span><br><span class="line">    <span class="type">int</span> c = <span class="number">300</span>;</span><br><span class="line">    <span class="comment">// 表示修改b的值为c的值, 不会产生效果，b 的地址依然与 a 相同</span></span><br><span class="line">    b = c; </span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ul>
+<li>引用主要用于函数参数和返回值，以及类的成员变量等场景，以提供对原始数据的直接访问，从而提高程序的效率和可读性。</li>
+<li>引用可以是<code>const</code>的，这表示你不能通过引用来修改它所指向的对象的值。</li>
+<li>引用在内部实现上通常是通过指针来实现的，但它们在语法和用途上与指针有显著的不同。引用提供了更直观、更安全的访问方式。</li>
+</ul>
+<h3 id="右值引用"><a href="#右值引用" class="headerlink" title="右值引用"></a>右值引用</h3><p>右值引用是C++11新增的特性，它允许我们为右值（即临时对象或即将被销毁的对象）创建一个引用。这样，我们就可以对右值进行更复杂的操作，比如移动语义（move semantics）。</p>
+<p>目的: 因为左值只能对已存在的对象进行绑定，为了支持移动语义（move semantics），右值引用允许我们在对象被销毁前“窃取”其资源（如动态分配的内存、文件句柄等），而不是进行深拷贝。这可以显著提高性能，特别是在处理大型对象或容器时。</p>
+<p>完美转发（perfect forwarding）是另一个与右值引用相关的概念，它允许我们将参数原封不动地传递给另一个函数，无论是左值还是右值。这通过模板和<code>std::forward</code>函数实现。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>左值引用（<code>T&amp;</code>）是C++98就有的特性，用于为已存在的对象创建别名。</li>
+<li>右值引用（<code>T&amp;&amp;</code>）是C++11新增的特性，用于为右值（即临时对象）创建引用，支持移动语义和完美转发等高级特性。</li>
+<li>右值引用的主要用途不是直接绑定到字面量或简单的右值表达式上，而是在函数参数和返回值中，以实现更高效的资源管理和更灵活的代码编写方式。</li>
+<li>绑定左值的引用是左值引用，绑定右值的引用是右值引用，左值引用不能绑定右值，因为右值不能修改。</li>
+</ul>
+<h2 id="const"><a href="#const" class="headerlink" title="const"></a>const</h2><p>​    在不同文件定义相同的名称的<code>const</code>对象，是不同的对象。如果想在多个文件之间共享<code>const</code>对象，必须在变量的定义之前添加extern关键字。编译器就已经确定数值了。</p>
+<h3 id="const-的引用"><a href="#const-的引用" class="headerlink" title="const 的引用"></a><code>const</code> 的引用</h3><ol>
+<li><p>常量引用可以常量和变量，常量引用本身不能修改，但原变量可以修改</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> b = <span class="number">100</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> &amp; c = a;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> &amp; d = b;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li><p>常量引用可以绑定<code>临时变量</code>, 因为临时变量是右值，是不能被修改的，所以用正常的引用无法绑定，但常量引用可以，常量引用不能修改。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> &amp; b = a*<span class="number">3</span>;</span><br><span class="line"><span class="comment">// 报错  int &amp; c = a*3; </span></span><br><span class="line"><span class="comment">// 可以通过非常量修改 a</span></span><br><span class="line">a = <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>常量引用可以绑定不同类型的值</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">double</span> a = <span class="number">3.14</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> &amp;b = a;</span><br></pre></td></tr></table></figure>
+<p>上面的代码相当于  正常引用不可以，因为<code>temp</code>是临时值，正常引用不能绑定</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//上面代码会做隐式转换,相当于下面代码</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> temp  = dval;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> &amp;b = temp;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="poniter-to-const-指向常量的指针"><a href="#poniter-to-const-指向常量的指针" class="headerlink" title="poniter to const 指向常量的指针"></a><code>poniter to const</code> 指向常量的指针</h3><p>指针指向的内容是常量或者变量 <code>const 修饰的是指针指向的对象的数据，即数据不能修改，但指针本身可以改变指向，就是指针指向的数据是 &quot;const int&quot;</code></p>
+<p>如果是变量同引用</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span>* a_ptr = &amp;a; <span class="comment">// int const* a_ptr = &amp;a;</span></span><br><span class="line">std::cout &lt;&lt; *a_ptr &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> b = <span class="number">100</span>;</span><br><span class="line">a_ptr = &amp;b;</span><br><span class="line">std::cout &lt;&lt; *a_ptr &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="const指针"><a href="#const指针" class="headerlink" title="const指针"></a><code>const</code>指针</h3><p><code>const 修饰的是指针本身，即指针本身不能改变指向，就是指针本身是 &quot;const&quot;的，不能发生改变</code></p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">100</span>;</span><br><span class="line"><span class="type">int</span> b = <span class="number">10</span>;</span><br><span class="line"><span class="type">int</span>* <span class="type">const</span> p = &amp;a;</span><br><span class="line"> <span class="comment">// 报错 p = &amp;b;</span></span><br></pre></td></tr></table></figure>
+<p>但是const指针不能指向常量，因为未对指针指向对象的内容进行限制，会报错</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> a = <span class="number">100</span>;</span><br><span class="line"><span class="comment">// 报错 int* const p = &amp;a; </span></span><br></pre></td></tr></table></figure>
+<h3 id="顶层const"><a href="#顶层const" class="headerlink" title="顶层const"></a>顶层<code>const</code></h3><p>指针本身是一个对象，它又可以指向另外一个对象。因此，指针本身是不是常量以及指针所指的是不是一个常量就是两个相互独立的问题</p>
+<p>用名词顶层<code>const（top-level const）</code>表示指针本身是个常量，而用名词底层<code>const（low-level const）</code>表示指针所指的对象是一个常量。</p>
+<p>顶层<code>const</code>可以表示任意的对象是常量，这一点对任何数据类型都适用，如算术类型、类、指针等。</p>
+<p>底层<code>const</code>则与指针和引用等复合类型的基本类型部分有关。比较特殊的是，指针类型既可以是顶层<code>const</code>也可以是底层<code>const</code>，这一点和其他类型相比区别明显：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line"><span class="comment">//不能改变p1的值，这是一个顶层const</span></span><br><span class="line"><span class="type">int</span> * <span class="type">const</span> pi = &amp;i;</span><br><span class="line"><span class="comment">//不能改变ci的值，这是一个顶层const</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> ci  = <span class="number">42</span>;</span><br><span class="line"><span class="comment">//允许改变p2的值，这是一个底层const</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> *  p2 = &amp;ci;</span><br><span class="line"><span class="comment">//靠右边的const是顶层const，靠左边的const是底层const</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> * <span class="type">const</span> p3 = p2;</span><br><span class="line"><span class="comment">//用于声明引用的const都是底层const, 引用默认是顶层const，不能改变指向</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> &amp;r = ci;</span><br></pre></td></tr></table></figure>
+<p>底层<code>const</code>的限制却不能忽视。当执行对象的拷贝操作时，拷入和拷出的对象必须具有相同的底层const资格，或者两个对象的数据类型必须能够转换</p>
+<p>下述 p4与p2指向同一个地址，p4不是底层const，说明可以修改a的数据，这样p2就无法保持不变的特性，所以报错</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//指针赋值要注意关注底层const</span></span><br><span class="line"><span class="comment">//p2拥有底层const,p4无底层const，所以无法赋值</span></span><br><span class="line"><span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> *p2 = &amp;a;</span><br><span class="line"><span class="comment">//int * p4 = p2;</span></span><br></pre></td></tr></table></figure>
+<h3 id="constexpr和常量表达式"><a href="#constexpr和常量表达式" class="headerlink" title="constexpr和常量表达式"></a><code>constexpr</code>和常量表达式</h3><p>常量表达式<code>（const expression）</code>是指值不会改变并且在编译过程就能得到计算结果的表达式。显然，字面值属于常量表达式，用常量表达式初始化的<code>const</code>对象也是常量表达式。后面将会提到，<code>C++</code>语言中有几种情况下是要用到常量表达式的。</p>
+<p>我们先在global.h中声明一个全局函数返回固定大小</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">extern</span> <span class="type">int</span> <span class="title">GetSize</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+<p>在global.cpp中实现</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">GetSize</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">20</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后我们用const定义一些常量表达式</p>
+<p>一个对象（或表达式）是不是常量表达式由它的数据类型和初始值共同决定，例如</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="comment">//max_files是一个常量表达式</span></span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> max_files = <span class="number">20</span>;</span><br><span class="line">    <span class="comment">//limit是一个常量表达式</span></span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> limit = max_files + <span class="number">10</span>;</span><br><span class="line">    <span class="comment">//staff_size不是常量表达式,无const声明</span></span><br><span class="line">    <span class="type">int</span> staff_size = <span class="number">20</span>;</span><br><span class="line">    <span class="comment">//sz不是常量表达式,运行时计算才得知</span></span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> sz = <span class="built_in">GetSize</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>尽管<code>staff_size</code>的初始值是个字面值常量，但由于它的数据类型只是一个普通<code>int</code>而非<code>const int</code>，所以它不属于常量表达式。</p>
+<p>另一方面，尽管<code>sz</code>本身是一个常量，但它的具体值直到运行时才能获取到，所以也不是常量表达式。</p>
+<p>在一个复杂系统中，很难（几乎肯定不能）分辨一个初始值到底是不是常量表达式。</p>
+<p>当然可以定义一个<code>const</code>变量并把它的初始值设为我们认为的某个常量表达式，但在实际使用时，尽管要求如此却常常发现初始值并非常量表达式的情况。</p>
+<p><strong>C++11新标准</strong></p>
+<p>C++11新标准规定，允许将变量声明为<code>constexpr</code>类型以便由编译器来验证变量的值是否是一个常量表达式。声明为<code>constexpr</code>的变量一定是一个常量，而且必须用常量表达式初始化：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//20是一个常量表达式</span></span><br><span class="line"><span class="keyword">constexpr</span> <span class="type">int</span> mf = <span class="number">20</span>;</span><br><span class="line"><span class="comment">//mf+1是一个常量表达式</span></span><br><span class="line"><span class="keyword">constexpr</span> <span class="type">int</span> limit = mf + <span class="number">10</span>;</span><br><span class="line"><span class="comment">//错误，GetSize()不是一个常量表达式，需要运行才能返回</span></span><br><span class="line"><span class="comment">//constexpr int sz = GetSize();</span></span><br></pre></td></tr></table></figure>
+<p>尽管不能使用普通函数作为<code>constexpr</code>变量的初始值，新标准允许定义一种特殊的<code>constexpr</code>函数。</p>
+<p>这种函数应该足够简单以使得编译时就可以计算其结果，这样就能用<code>constexpr</code>函数去初始化<code>constexpr</code>变量了。</p>
+<p>我们在<code>global.h</code>中定义一个<code>constexpr</code>函数</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="type">int</span> <span class="title">GetSizeConst</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为了避免在多个源文件中包含同一个头文件而导致的多重定义错误，可以将 <code>constexpr</code> 函数声明为 <code>inline</code>。</p>
+<p><code>inline</code> 关键字允许在多个翻译单元中定义同一个函数，而不会引起链接错误。</p>
+<p>接下来在定义一个<code>constexpr</code>变量就行了</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">constexpr</span> <span class="type">int</span> sz = <span class="built_in">GetSizeConst</span>();</span><br></pre></td></tr></table></figure>
+<h3 id="指针和constexpr"><a href="#指针和constexpr" class="headerlink" title="指针和constexpr"></a><strong>指针和<code>constexpr</code></strong></h3><p>必须明确一点，在constexpr声明中如果定义了一个指针，限定符constexpr仅对指针有效，与指针所指的对象无关：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//p是一个指向整形常量的指针</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> * p = <span class="literal">nullptr</span>;</span><br><span class="line"><span class="comment">//q是一个指向整数的常量指针 类似与顶层const</span></span><br><span class="line"><span class="keyword">constexpr</span> <span class="type">int</span> *q = <span class="literal">nullptr</span>;</span><br></pre></td></tr></table></figure>
+<p>一个<code>constexpr</code>指针的初始值必须是<code>nullptr</code>或者0，或者是存储于某个固定地址中的对象。</p>
+<p>函数体内定义的变量一般来说并非存放在固定地址中，因此<code>constexpr</code>指针不能指向这样的变量。</p>
+<p>定义于所有函数体之外的对象其地址固定不变，能用来初始化<code>constexpr</code>指针</p>
+<p>global_i是一个全局变量</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">//constexpr指针只能绑定固定地址</span></span><br><span class="line"><span class="comment">//constexpr int *p = &amp;mvalue;</span></span><br><span class="line"><span class="keyword">constexpr</span> <span class="type">int</span> *p = <span class="literal">nullptr</span>;</span><br><span class="line"><span class="comment">//可以绑定全局变量，全局变量地址固定</span></span><br><span class="line"><span class="keyword">constexpr</span> <span class="type">int</span> *cp = &amp;global_i;</span><br></pre></td></tr></table></figure>
+<p>可以修改<code>constexpr</code>指向的内容</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">constexpr</span> <span class="type">int</span> *p = &amp;global_i;</span><br><span class="line"><span class="comment">//修改p指向的内容数据</span></span><br><span class="line">*p = <span class="number">1024</span>;</span><br></pre></td></tr></table></figure>
+<p><strong>问题</strong></p>
+<p>global_i是一个全局变量，下面这个指针是什么类型？能否修改<code>cp</code>指向的数据的内容(<code>*cp = 200</code>)？</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">constexpr</span> <span class="type">const</span> <span class="type">int</span> * cp = &amp;global_i;</span><br><span class="line"><span class="comment">// 不可以，类似与 const int * con cp = &amp;global_i;</span></span><br></pre></td></tr></table></figure>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><ul>
+<li><p>顶层 <code>const</code>约束的是自己本身，所以在某些情况下可以忽视，因为它只能保证自身符合不变的特性，当执行对象的拷贝操作时，对于拷入的对象不存在限制，拷入对象的不变性，由它自己保证。对于拷出操作，根据自己的类型限制执行对象的类型，如</p>
+<p><code>const int a = 10;  // 这样会报错 int* p2 = &amp;a;</code></p>
+</li>
+<li><p>底层<code>const</code>表示指针所指的对象是一个常量. (引用天生是底层) , 当执行对象的拷贝操作时，拷入和拷出的对象必须具有相同的底层const资格，且两个对象的数据类型必须能够转换。</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>cpp-study</category>
+      </categories>
+      <tags>
+        <tag>cpp</tag>
+      </tags>
+  </entry>
 </search>
