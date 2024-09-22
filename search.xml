@@ -1367,7 +1367,7 @@
 <figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">constexpr</span> <span class="type">int</span> *p = &amp;global_i;</span><br><span class="line"><span class="comment">//修改p指向的内容数据</span></span><br><span class="line">*p = <span class="number">1024</span>;</span><br></pre></td></tr></table></figure>
 <p><strong>问题</strong></p>
 <p>global_i是一个全局变量，下面这个指针是什么类型？能否修改<code>cp</code>指向的数据的内容(<code>*cp = 200</code>)？</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">constexpr</span> <span class="type">const</span> <span class="type">int</span> * cp = &amp;global_i;</span><br><span class="line"><span class="comment">// 不可以，类似与 const int * con cp = &amp;global_i;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">constexpr</span> <span class="type">const</span> <span class="type">int</span> * cp = &amp;global_i;</span><br><span class="line"><span class="comment">// 不可以，类似与 const int * const cp = &amp;global_i;</span></span><br></pre></td></tr></table></figure>
 <h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><ul>
 <li><p>顶层 <code>const</code>约束的是自己本身，所以在某些情况下可以忽视，因为它只能保证自身符合不变的特性，当执行对象的拷贝操作时，对于拷入的对象不存在限制，拷入对象的不变性，由它自己保证。对于拷出操作，根据自己的类型限制执行对象的类型，如</p>
 <p><code>const int a = 10;  // 这样会报错 int* p2 = &amp;a;</code></p>
